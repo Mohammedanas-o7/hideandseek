@@ -1,0 +1,197 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#0d1017">
+  <title>Calculator — Python Development Project</title>
+  <style>
+    :root {
+      --bg: #0b0e13; --panel: #11151d; --panel2: #171d28; --line: #2b3443;
+      --text: #f5f7fb; --muted: #8d99ad; --blue: #2864ed; --blue2: #4e82ff;
+      --green: #38d989; --red: #ff6b7d; --shadow: 0 24px 70px #0007;
+    }
+    * { box-sizing: border-box; }
+    body { margin: 0; min-height: 100vh; background: radial-gradient(ellipse at 15% 0%, #162345 0, transparent 35%), var(--bg); color: var(--text); font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; }
+    button, input { font: inherit; }
+    .shell { width: min(1100px, 100% - 32px); margin: 0 auto; padding: 28px 0 54px; }
+    header { display:flex; align-items:center; justify-content:space-between; gap:18px; margin-bottom:28px; }
+    .brand { display:flex; align-items:center; gap:12px; font-weight:800; letter-spacing:-.03em; font-size:1.12rem; }
+    .brand-icon { width:42px; height:42px; display:grid; place-items:center; border-radius:14px; background:linear-gradient(145deg,var(--blue2),#1744bd); box-shadow:0 8px 25px #2864ed55; font-size:23px; }
+    .pill { border:1px solid #344052; border-radius:999px; padding:9px 13px; color:#b8c3d5; font-size:.78rem; font-weight:750; letter-spacing:.06em; }
+    .hero { display:grid; grid-template-columns:1.15fr .85fr; align-items:center; gap:30px; margin:34px 0 38px; }
+    .eyebrow { display:inline-flex; align-items:center; gap:8px; color:#8eafff; font-size:.78rem; font-weight:800; letter-spacing:.13em; text-transform:uppercase; }
+    .dot { width:7px; height:7px; background:var(--green); border-radius:50%; box-shadow:0 0 12px #38d989; }
+    h1 { font-size:clamp(2.35rem,5vw,4.3rem); line-height:1.04; letter-spacing:-.06em; margin:15px 0 18px; }
+    h1 span { color:var(--blue2); }
+    .hero p { max-width:570px; color:var(--muted); line-height:1.8; font-size:1.04rem; margin:0; }
+    .hero-card { border:1px solid #303a4b; background:linear-gradient(145deg,#151b27,#0f131a); border-radius:28px; padding:22px; box-shadow:var(--shadow); }
+    .card-top { display:flex; justify-content:space-between; align-items:center; color:#9ba8bc; font-size:.82rem; margin-bottom:16px; }
+    .status { color:var(--green); font-weight:800; letter-spacing:.08em; font-size:.72rem; }
+    .display { background:#090c11; border:1px solid #252d3a; border-radius:17px; padding:18px 18px 14px; text-align:right; margin-bottom:13px; min-height:112px; overflow:hidden; }
+    .expression { color:#8290a7; min-height:23px; font-size:.94rem; overflow-wrap:anywhere; }
+    .result { font-size:clamp(2.2rem,5vw,3rem); letter-spacing:-.05em; font-weight:750; margin-top:5px; overflow-wrap:anywhere; }
+    .keys { display:grid; grid-template-columns:repeat(4,1fr); gap:9px; }
+    .key { border:1px solid #2a3342; background:#1a202c; color:#e9edf5; min-height:54px; border-radius:14px; cursor:pointer; font-weight:700; transition:transform .12s, background .12s, border .12s; }
+    .key:hover { background:#273247; border-color:#536684; }
+    .key:active { transform:scale(.96); }
+    .key.utility { color:#aab9d2; background:#202837; }
+    .key.operator { background:#1a2b50; color:#91b0ff; border-color:#294c93; }
+    .key.equals { background:var(--blue); border-color:var(--blue); color:white; box-shadow:0 8px 20px #2864ed33; }
+    .key.zero { grid-column:span 2; }
+    .section-title { display:flex; justify-content:space-between; align-items:end; gap:12px; margin:42px 0 17px; }
+    h2 { margin:0; font-size:1.5rem; letter-spacing:-.04em; }
+    .section-title p { margin:5px 0 0; color:var(--muted); font-size:.92rem; }
+    .features { display:grid; grid-template-columns:repeat(3,1fr); gap:14px; }
+    .feature { border:1px solid #252e3c; background:#11151d; border-radius:20px; padding:20px; }
+    .feature .symbol { display:grid; place-items:center; width:40px; height:40px; border-radius:13px; background:#1a2a4c; color:#8eb0ff; font-size:20px; margin-bottom:16px; }
+    .feature h3 { font-size:1rem; margin:0 0 8px; }
+    .feature p { color:var(--muted); font-size:.9rem; line-height:1.65; margin:0; }
+    .history { border:1px solid #252e3c; background:#11151d; border-radius:20px; padding:18px; }
+    .history-head { display:flex; justify-content:space-between; align-items:center; gap:10px; margin-bottom:12px; }
+    .small-btn { color:#9eb8ff; border:1px solid #344b7d; background:#182440; border-radius:10px; padding:8px 11px; cursor:pointer; font-size:.82rem; font-weight:700; }
+    .history-list { display:grid; gap:8px; }
+    .history-item { display:flex; justify-content:space-between; gap:12px; padding:12px 13px; border-radius:12px; background:#171d28; color:#c4ccda; font-size:.9rem; }
+    .history-item strong { color:white; }
+    .empty { color:#78869b; padding:14px 4px; font-size:.9rem; }
+    footer { display:flex; justify-content:space-between; gap:12px; flex-wrap:wrap; margin-top:36px; padding-top:18px; border-top:1px solid #252d39; color:#748198; font-size:.82rem; }
+    .toast { position:fixed; left:50%; bottom:24px; transform:translate(-50%,20px); opacity:0; pointer-events:none; padding:12px 16px; background:#222d40; border:1px solid #405579; border-radius:12px; box-shadow:var(--shadow); transition:.2s; z-index:3; }
+    .toast.show { opacity:1; transform:translate(-50%,0); }
+    @media(max-width:800px) { .hero { grid-template-columns:1fr; } .hero-card { max-width:520px; width:100%; margin:auto; } .features { grid-template-columns:1fr; } }
+    @media(max-width:480px) { .shell { width:min(100% - 22px, 1100px); padding-top:17px; } header { margin-bottom:20px; } .pill { font-size:.65rem; padding:8px 10px; } .hero { margin-top:25px; } .hero-card { padding:15px; border-radius:22px; } .key { min-height:50px; } .section-title { align-items:start; flex-direction:column; } }
+  </style>
+</head>
+<body>
+  <main class="shell">
+    <header>
+      <div class="brand"><div class="brand-icon">∑</div><span>Calc<span style="color:#7ea3ff">Lab</span></span></div>
+      <div class="pill">PYTHON DEVELOPMENT · PROJECT 02</div>
+    </header>
+
+    <section class="hero">
+      <div>
+        <div class="eyebrow"><span class="dot"></span> Interactive project demo</div>
+        <h1>Simple math.<br><span>Smart design.</span></h1>
+        <p>A responsive calculator experience built around a clean interface, intuitive controls, and reliable arithmetic. Try the calculator, review recent calculations, and explore the project features below.</p>
+      </div>
+      <section class="hero-card" aria-label="Calculator">
+        <div class="card-top"><span>STANDARD CALCULATOR</span><span class="status">● READY</span></div>
+        <div class="display" aria-live="polite">
+          <div class="expression" id="expression">Ready for your first calculation</div>
+          <div class="result" id="result">0</div>
+        </div>
+        <div class="keys" id="keys">
+          <button class="key utility" data-action="clear">AC</button>
+          <button class="key utility" data-action="delete">DEL</button>
+          <button class="key utility" data-value="%">%</button>
+          <button class="key operator" data-value="÷">÷</button>
+          <button class="key" data-value="7">7</button><button class="key" data-value="8">8</button><button class="key" data-value="9">9</button><button class="key operator" data-value="×">×</button>
+          <button class="key" data-value="4">4</button><button class="key" data-value="5">5</button><button class="key" data-value="6">6</button><button class="key operator" data-value="−">−</button>
+          <button class="key" data-value="1">1</button><button class="key" data-value="2">2</button><button class="key" data-value="3">3</button><button class="key operator" data-value="+">+</button>
+          <button class="key zero" data-value="0">0</button><button class="key" data-value=".">.</button><button class="key equals" data-action="equals">=</button>
+        </div>
+      </section>
+    </section>
+
+    <section>
+      <div class="section-title"><div><h2>Key features</h2><p>Designed to be simple to use and easy to extend.</p></div></div>
+      <div class="features">
+        <article class="feature"><div class="symbol">▦</div><h3>Responsive layout</h3><p>Adapts smoothly to desktop, tablet, and mobile screens without losing usability.</p></article>
+        <article class="feature"><div class="symbol">⌘</div><h3>Interactive controls</h3><p>Use the on-screen keypad or your keyboard for quick arithmetic operations.</p></article>
+        <article class="feature"><div class="symbol">↺</div><h3>Calculation history</h3><p>Recent results are saved in this session so you can revisit previous calculations.</p></article>
+      </div>
+    </section>
+
+    <section>
+      <div class="section-title"><div><h2>Recent calculations</h2><p>Your latest results appear here.</p></div></div>
+      <div class="history">
+        <div class="history-head"><strong>History</strong><button class="small-btn" id="clearHistory">Clear history</button></div>
+        <div class="history-list" id="historyList"><div class="empty">No calculations yet. Try 12 + 8.</div></div>
+      </div>
+    </section>
+    <footer><span>CalcLab · Python Development Task</span><span>Frontend demo · No dependencies required</span></footer>
+  </main>
+  <div class="toast" id="toast" role="status"></div>
+  <script>
+    const expressionEl = document.getElementById('expression');
+    const resultEl = document.getElementById('result');
+    const historyList = document.getElementById('historyList');
+    const toast = document.getElementById('toast');
+    let expression = '';
+    let justSolved = false;
+    let history = [];
+
+    function displayExpression(value) { expressionEl.textContent = value || 'Ready for your first calculation'; }
+    function displayResult(value) { resultEl.textContent = value; }
+    function notify(message) {
+      toast.textContent = message; toast.classList.add('show');
+      clearTimeout(notify.timer); notify.timer = setTimeout(() => toast.classList.remove('show'), 1800);
+    }
+    function append(value) {
+      if (justSolved && /[0-9.]/.test(value)) expression = '';
+      justSolved = false;
+      if (value === '.') {
+        const current = expression.split(/[+\-×÷%]/).pop();
+        if (current.includes('.')) return;
+        if (!current) value = '0.';
+      }
+      if (/[+\-×÷%]/.test(value) && expression === '' && value !== '−') return;
+      if (/[+\-×÷%]/.test(value) && /[+\-×÷%]$/.test(expression)) expression = expression.slice(0, -1);
+      expression += value;
+      displayExpression(expression);
+      displayResult(expression || '0');
+    }
+    function solve() {
+      if (!expression) return;
+      try {
+        let source = expression.replace(/×/g, '*').replace(/÷/g, '/').replace(/−/g, '-').replace(/%/g, '/100');
+        if (!/^[0-9+\-*/.()\s]+$/.test(source)) throw new Error('Invalid expression');
+        const tokens = source.match(/(?:\d+\.?\d*|\.\d+|[()+\-*/])/g) || [];
+        if (tokens.join('') !== source.replace(/\s/g, '')) throw new Error('Invalid expression');
+        const value = Function('"use strict"; return (' + source + ')')();
+        if (!Number.isFinite(value)) throw new Error('Cannot divide by zero');
+        const answer = String(Number(value.toPrecision(12)));
+        history.unshift({ expression, answer });
+        history = history.slice(0, 8);
+        renderHistory();
+        displayExpression(expression + ' =');
+        displayResult(answer);
+        expression = answer;
+        justSolved = true;
+      } catch (error) {
+        notify(error.message === 'Cannot divide by zero' ? 'Cannot divide by zero' : 'Please enter a valid calculation');
+      }
+    }
+    function renderHistory() {
+      historyList.innerHTML = '';
+      if (!history.length) { historyList.innerHTML = '<div class="empty">No calculations yet. Try 12 + 8.</div>'; return; }
+      history.forEach(item => {
+        const row = document.createElement('div'); row.className = 'history-item';
+        const left = document.createElement('span'); left.textContent = item.expression + ' =';
+        const right = document.createElement('strong'); right.textContent = item.answer;
+        row.append(left, right); historyList.appendChild(row);
+      });
+    }
+    document.getElementById('keys').addEventListener('click', event => {
+      const button = event.target.closest('button'); if (!button) return;
+      const action = button.dataset.action, value = button.dataset.value;
+      if (action === 'clear') { expression = ''; justSolved = false; displayExpression('Cleared'); displayResult('0'); }
+      else if (action === 'delete') { expression = expression.slice(0, -1); justSolved = false; displayExpression(expression); displayResult(expression || '0'); }
+      else if (action === 'equals') solve();
+      else if (value) append(value);
+    });
+    document.getElementById('clearHistory').addEventListener('click', () => { history = []; renderHistory(); notify('History cleared'); });
+    document.addEventListener('keydown', event => {
+      if (/^[0-9.]$/.test(event.key)) append(event.key);
+      else if (event.key === '+') append('+');
+      else if (event.key === '-') append('−');
+      else if (event.key === '*') append('×');
+      else if (event.key === '/') { event.preventDefault(); append('÷'); }
+      else if (event.key === 'Enter' || event.key === '=') { event.preventDefault(); solve(); }
+      else if (event.key === 'Backspace') { expression = expression.slice(0, -1); displayExpression(expression); displayResult(expression || '0'); }
+      else if (event.key === 'Escape') { expression = ''; displayExpression('Cleared'); displayResult('0'); }
+      else if (event.key === '%') append('%');
+    });
+  </script>
+</body>
+</html>
