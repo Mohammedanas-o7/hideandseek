@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TaskFlow — To-Do List Project</title>
+<style>
+:root{--bg:#090d0c;--panel:#111816;--panel2:#151e1a;--line:#33423a;--green:#22c55e;--green2:#16a34a;--mint:#dcfce7;--text:#f4f8f5;--muted:#94a49a;--soft:#c0ccc4;--yellow:#facc15}
+*{box-sizing:border-box}body{margin:0;background:radial-gradient(ellipse at top left,#10241a 0%,var(--bg) 44%);color:var(--text);font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;line-height:1.5}
+button,input,select{font:inherit}button{cursor:pointer}
+.wrap{max-width:1080px;margin:auto;padding:28px 22px 60px}
+header{display:flex;justify-content:space-between;align-items:center;gap:16px;margin-bottom:38px}
+.brand{display:flex;align-items:center;gap:12px;font-weight:800;font-size:1.25rem;letter-spacing:-.4px}
+.logo{display:grid;place-items:center;width:44px;height:44px;background:linear-gradient(135deg,#4ade80,#15803d);border-radius:14px;color:#06210f;font-size:23px;box-shadow:0 8px 24px #16a34a35}
+.admin{display:flex;align-items:center;gap:10px;color:var(--soft);font-size:.92rem}.avatar{display:grid;place-items:center;width:38px;height:38px;border-radius:50%;background:#dcfce7;color:#166534;font-weight:800}
+.hero{margin-bottom:28px}.eyebrow{display:inline-flex;align-items:center;gap:8px;color:#86efac;text-transform:uppercase;letter-spacing:2px;font-weight:800;font-size:.75rem}
+.dot{height:8px;width:8px;background:var(--green);border-radius:50%;box-shadow:0 0 12px #22c55e}
+h1{font-size:clamp(2rem,5vw,3.4rem);letter-spacing:-1.8px;line-height:1.1;margin:12px 0}
+.hero p{color:var(--muted);max-width:680px;margin:0;font-size:1.05rem}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin:28px 0 30px}
+.stat{padding:18px 20px;background:#111a16;border:1px solid #293a30;border-radius:18px}.stat small{color:var(--muted);font-size:.83rem}.stat strong{display:block;font-size:1.8rem;margin-top:4px}
+.layout{display:grid;grid-template-columns:minmax(0,1.2fr) minmax(300px,.8fr);gap:22px;align-items:start}
+.card{background:linear-gradient(145deg,#121a16,#0f1513);border:1px solid #526259;border-left:7px solid var(--green);border-radius:28px;padding:28px;box-shadow:0 18px 45px #0002}
+.card-top{display:flex;justify-content:space-between;align-items:center;gap:14px;margin-bottom:28px}
+.number{display:grid;place-items:center;width:64px;height:64px;border-radius:50%;background:#dcfce7;color:#15803d;font-size:1.8rem;font-weight:900}
+.status{background:#ecfdf5;color:#166534;border-radius:999px;padding:9px 16px;font-weight:800;font-size:.82rem;white-space:nowrap}
+.meta{display:flex;flex-direction:column;gap:7px;color:var(--muted);font-size:.92rem;margin-bottom:24px}.meta b{color:var(--soft);font-weight:650}
+h2{font-size:clamp(1.55rem,3vw,2rem);letter-spacing:-.6px;margin:0 0 14px}
+.description{font-size:1.05rem;color:var(--muted);margin:0 0 24px}
+hr{border:0;border-top:1px solid #4a5b51;margin:24px 0}
+.section-label{font-size:.83rem;font-weight:900;letter-spacing:1.5px;color:#4ade80;margin-bottom:10px}
+ul.features{margin:0;padding-left:20px;color:var(--muted)}ul.features li{padding:3px 0}
+.outcome{margin-top:24px}.outcome .section-label{color:#86efac}.outcome p{color:var(--muted);margin:8px 0 0}
+.primary{display:flex;align-items:center;justify-content:center;gap:12px;width:100%;border:0;border-radius:18px;padding:17px 18px;margin-top:30px;background:linear-gradient(110deg,#22c55e,#15803d);color:#06210f;font-weight:900;font-size:1rem;box-shadow:0 9px 25px #16a34a2b;transition:transform .2s,filter .2s}.primary:hover{transform:translateY(-2px);filter:brightness(1.08)}
+.todo-panel{background:#111816;border:1px solid #293a30;border-radius:24px;padding:24px}
+.todo-heading{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:6px}.todo-heading h2{font-size:1.35rem;margin:0}.pill{font-size:.75rem;background:#183523;color:#86efac;padding:6px 10px;border-radius:99px;font-weight:800}
+.sub{font-size:.9rem;color:var(--muted);margin:0 0 20px}
+.add-form{display:flex;gap:8px}.add-form input{min-width:0;flex:1;background:#0a100d;border:1px solid #35453b;border-radius:12px;padding:12px;color:var(--text);outline:none}.add-form input:focus{border-color:var(--green);box-shadow:0 0 0 3px #22c55e20}.add-form button{border:0;background:var(--green);color:#05200e;font-size:1.35rem;font-weight:900;width:48px;border-radius:12px}
+.filters{display:flex;gap:8px;margin:18px 0;flex-wrap:wrap}.filter{background:transparent;border:1px solid #34443a;color:var(--muted);padding:7px 12px;border-radius:99px;font-size:.82rem}.filter.active{background:#183523;border-color:#22c55e;color:#86efac}
+.task-list{display:flex;flex-direction:column;gap:10px;min-height:120px}.task{display:flex;align-items:flex-start;gap:11px;padding:13px;background:#0d1410;border:1px solid #26362c;border-radius:14px}.task input{accent-color:var(--green);width:18px;height:18px;margin-top:3px}.task-text{flex:1;min-width:0;overflow-wrap:anywhere}.task.done .task-text{text-decoration:line-through;color:#65766b}.task small{display:block;color:#718176;font-size:.75rem;margin-top:3px}.delete{background:transparent;border:0;color:#7f9185;font-size:1.1rem;padding:0 3px}.delete:hover{color:#fca5a5}
+.empty{color:#718176;text-align:center;padding:26px 10px;font-size:.9rem}.todo-footer{display:flex;justify-content:space-between;gap:10px;color:#7f9185;font-size:.8rem;margin-top:17px}
+.tip{margin-top:18px;padding:15px;border:1px solid #263a2c;border-radius:16px;color:var(--muted);font-size:.86rem;background:#0d1510}.tip b{color:#86efac}
+footer{text-align:center;color:#607066;font-size:.8rem;margin-top:38px}
+@media(max-width:760px){.wrap{padding:22px 14px 40px}header{margin-bottom:30px}.stats{gap:9px}.stat{padding:14px}.stat strong{font-size:1.5rem}.layout{grid-template-columns:1fr}.card{padding:22px;border-radius:24px}.todo-panel{padding:20px}.number{width:58px;height:58px}.status{font-size:.75rem;padding:8px 12px}}
+@media(max-width:390px){.admin span{display:none}.stats{grid-template-columns:1fr}.stat{display:flex;justify-content:space-between;align-items:center}.stat strong{margin:0}.card-top{margin-bottom:22px}.add-form{gap:6px}}
+</style>
+</head>
+<body>
+<div class="wrap">
+<header>
+  <div class="brand"><div class="logo">✓</div><span>TaskFlow</span></div>
+  <div class="admin"><div class="avatar">A</div><span>Admin · <b>Anas</b></span></div>
+</header>
+<section class="hero">
+  <div class="eyebrow"><span class="dot"></span> Python Development · Project 04</div>
+  <h1>Make every task<br>count.</h1>
+  <p>A clean, responsive To-Do List experience. Organize your day, track your progress, and turn small steps into meaningful results.</p>
+</section>
+<section class="stats" aria-label="Task statistics">
+  <div class="stat"><small>Total tasks</small><strong id="totalStat">3</strong></div>
+  <div class="stat"><small>Completed</small><strong id="doneStat">1</strong></div>
+  <div class="stat"><small>Still to do</small><strong id="leftStat">2</strong></div>
+</section>
+<main class="layout">
+  <section class="card">
+    <div class="card-top"><div class="number">4</div><div class="status">✓ &nbsp; PROJECT TASK</div></div>
+    <div class="meta"><span>▦ &nbsp; Due Date: <b>21 Sept 2026</b></span><span>◷ &nbsp; <b>READY TO BUILD</b></span></div>
+    <h2>Create a To-Do List</h2>
+    <p class="description">Complete the Python Development task: Create a To-Do List.</p>
+    <hr>
+    <div class="section-label">KEY FEATURES</div>
+    <ul class="features">
+      <li>Responsive component layout for mobile and desktop</li>
+      <li>Modern aesthetics and polished CSS styling</li>
+      <li>Add, complete, filter, and delete tasks</li>
+      <li>Live task statistics and persistent local storage</li>
+    </ul>
+    <div class="outcome"><div class="section-label">EXPECTED OUTCOME</div><p>Build an application demonstrating an understanding of frontend logic, task management, data persistence, and user interface principles.</p></div>
+    <button class="primary" onclick="document.getElementById('newTask').focus()"> <span style="font-size:1.3rem">↗</span> Start Managing Tasks</button>
+  </section>
+  <section>
+    <div class="todo-panel">
+      <div class="todo-heading"><h2>My To-Do List</h2><span class="pill">LIVE</span></div>
+      <p class="sub">Your tasks, all in one place.</p>
+      <form class="add-form" id="addForm"><input id="newTask" type="text" maxlength="140" placeholder="What needs to get done?" aria-label="New task" required><button type="submit" aria-label="Add task">+</button></form>
+      <div class="filters" role="group" aria-label="Filter tasks"><button class="filter active" data-filter="all">All</button><button class="filter" data-filter="active">Active</button><button class="filter" data-filter="done">Completed</button></div>
+      <div class="task-list" id="taskList"></div>
+      <div class="todo-footer"><span id="remaining">2 tasks left</span><button class="filter" id="clearDone">Clear completed</button></div>
+    </div>
+    <div class="tip"><b>✦ Quick tip</b><br>Keep tasks short and specific. Check them off as you go to see your progress update automatically.</div>
+  </section>
+</main>
+<footer>TaskFlow · Built for learning, designed for doing.</footer>
+</div>
+<script>
+const STORAGE_KEY='taskflow-green-tasks-v1';
+const starter=[
+ {id:1,text:'Plan the project layout',done:true},
+ {id:2,text:'Build the responsive interface',done:false},
+ {id:3,text:'Test task actions and filters',done:false}
+];
+let tasks;
+try{const saved=localStorage.getItem(STORAGE_KEY);tasks=saved?JSON.parse(saved):starter}catch(e){tasks=starter}
+let currentFilter='all';
+const list=document.getElementById('taskList');
+function save(){try{localStorage.setItem(STORAGE_KEY,JSON.stringify(tasks))}catch(e){}}
+function render(){
+ const visible=tasks.filter(t=>currentFilter==='all'||(currentFilter==='active'&&!t.done)||(currentFilter==='done'&&t.done));
+ list.innerHTML='';
+ if(!visible.length){list.innerHTML='<div class="empty">Nothing here yet. Add a task to get started ✨</div>'}
+ visible.forEach(t=>{
+  const row=document.createElement('div');row.className='task'+(t.done?' done':'');
+  const check=document.createElement('input');check.type='checkbox';check.checked=t.done;check.setAttribute('aria-label','Mark '+t.text+' complete');
+  check.addEventListener('change',()=>{t.done=check.checked;save();render()});
+  const content=document.createElement('div');content.className='task-text';content.textContent=t.text;
+  const small=document.createElement('small');small.textContent=t.done?'Completed':'In progress';content.appendChild(small);
+  const del=document.createElement('button');del.className='delete';del.innerHTML='×';del.setAttribute('aria-label','Delete '+t.text);del.addEventListener('click',()=>{tasks=tasks.filter(x=>x.id!==t.id);save();render()});
+  row.append(check,content,del);list.appendChild(row);
+ });
+ const completed=tasks.filter(t=>t.done).length;
+ document.getElementById('totalStat').textContent=tasks.length;
+ document.getElementById('doneStat').textContent=completed;
+ document.getElementById('leftStat').textContent=tasks.length-completed;
+ document.getElementById('remaining').textContent=(tasks.length-completed)+' task'+(tasks.length-completed===1?'':'s')+' left';
+}
+document.getElementById('addForm').addEventListener('submit',e=>{
+ e.preventDefault();const input=document.getElementById('newTask');const text=input.value.trim();if(!text)return;
+ tasks.unshift({id:Date.now()+Math.random(),text,done:false});input.value='';currentFilter='all';
+ document.querySelectorAll('.filter[data-filter]').forEach(b=>b.classList.toggle('active',b.dataset.filter==='all'));
+ save();render();
+});
+document.querySelectorAll('.filter[data-filter]').forEach(b=>b.addEventListener('click',()=>{currentFilter=b.dataset.filter;document.querySelectorAll('.filter[data-filter]').forEach(x=>x.classList.toggle('active',x===b));render()}));
+document.getElementById('clearDone').addEventListener('click',()=>{tasks=tasks.filter(t=>!t.done);save();render()});
+render();
+</script>
+</body>
+</html>
