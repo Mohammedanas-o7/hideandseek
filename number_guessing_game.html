@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#0b0d12">
+<title>Number Quest — Python Project</title>
+<style>
+:root{--bg:#0b0d12;--panel:#11151d;--panel2:#171c27;--text:#f7f8fc;--muted:#8c96aa;--blue:#e32636;--blue2:#ff5262;--line:#303744;--green:#36d58b;--red:#ff6878}
+*{box-sizing:border-box}body{margin:0;background:radial-gradient(ellipse at 15% 0%,#3b111a 0,transparent 38%),var(--bg);font-family:Inter,ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif;color:var(--text);min-height:100vh}
+header{height:76px;border-bottom:1px solid #252a35;display:flex;align-items:center;justify-content:space-between;padding:0 clamp(18px,5vw,70px);background:#0c0f15eF;position:sticky;top:0;z-index:3;backdrop-filter:blur(14px)}
+.brand{display:flex;align-items:center;gap:12px;font-weight:800;letter-spacing:.2px}.logo{width:42px;height:42px;display:grid;place-items:center;border-radius:13px;background:linear-gradient(135deg,var(--blue),#ff754d);font-size:22px;box-shadow:0 8px 24px #e3263644}.brand small{display:block;color:var(--muted);font-size:11px;letter-spacing:2px;font-weight:700;margin-top:2px}.status{font-size:12px;color:#a9b5c9;border:1px solid #343c4b;border-radius:999px;padding:8px 12px;display:flex;align-items:center;gap:7px}.dot{width:7px;height:7px;border-radius:50%;background:var(--green);box-shadow:0 0 10px #36d58b}
+main{max-width:1120px;margin:0 auto;padding:42px 22px 70px}.eyebrow{font-size:12px;letter-spacing:2.4px;color:var(--blue2);font-weight:800;text-transform:uppercase}.hero{display:grid;grid-template-columns:1.05fr .95fr;gap:38px;align-items:center;padding:24px 0 42px}.hero h1{font-size:clamp(36px,5vw,60px);line-height:1.04;letter-spacing:-2.5px;margin:14px 0 18px}.hero h1 span{color:var(--blue2)}.hero p{color:var(--muted);font-size:16px;line-height:1.8;max-width:500px}.chips{display:flex;gap:9px;flex-wrap:wrap;margin-top:24px}.chip{padding:8px 12px;border:1px solid #2c3443;background:#131823;border-radius:8px;color:#c6cee0;font-size:12px}
+.preview{border:1px solid #394253;border-radius:26px;background:linear-gradient(145deg,#161d2a,#0e121a);padding:25px;box-shadow:0 24px 80px #0006;position:relative;overflow:hidden}.preview:before{content:"";position:absolute;width:220px;height:220px;background:#e326361c;filter:blur(30px);right:-60px;top:-90px;border-radius:50%}.preview-top{display:flex;justify-content:space-between;align-items:center;position:relative}.label{color:var(--muted);font-size:12px;font-weight:700;letter-spacing:1.4px}.level{background:#202c45;color:#ff9aa4;border-radius:99px;padding:7px 10px;font-size:11px;font-weight:800}.big-number{font-size:68px;line-height:1;font-weight:850;letter-spacing:-4px;margin:28px 0 10px}.big-number span{color:var(--blue2)}.preview p{font-size:13px;margin:0;color:var(--muted)}.meter{height:6px;background:#252d3a;border-radius:10px;margin-top:24px;overflow:hidden}.meter span{display:block;width:65%;height:100%;background:linear-gradient(90deg,var(--blue),#ff754d);border-radius:10px}.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:18px}.stat{background:#171d28;border:1px solid #293140;border-radius:12px;padding:13px}.stat strong{display:block;font-size:20px}.stat small{color:var(--muted);font-size:11px}
+.content{display:grid;grid-template-columns:1fr 1fr;gap:22px}.card{border:1px solid #343c49;border-radius:22px;background:var(--panel);padding:clamp(20px,3vw,30px);position:relative;overflow:hidden}.card:before{content:"";position:absolute;left:0;top:25px;bottom:25px;width:3px;background:var(--blue);border-radius:0 6px 6px 0}.card h2{margin:0 0 8px;font-size:22px;letter-spacing:-.5px}.sub{color:var(--muted);font-size:13px;line-height:1.65;margin:0 0 23px}.game-card{grid-row:span 2}.game-head{display:flex;justify-content:space-between;gap:12px;align-items:center}.pill{font-size:11px;color:var(--green);background:#133126;padding:7px 10px;border-radius:99px;font-weight:800;white-space:nowrap}.range{display:flex;justify-content:space-between;color:#7f8ba1;font-size:11px;margin:22px 0 8px}.range-line{height:4px;border-radius:9px;background:linear-gradient(90deg,#e32636,#ff754d)}
+.input-row{display:flex;gap:10px;margin-top:16px}.input-row input{min-width:0;flex:1;background:#0b0f16;border:1px solid #354052;border-radius:12px;color:white;font-size:18px;font-weight:700;padding:15px;outline:none}.input-row input:focus{border-color:var(--blue2);box-shadow:0 0 0 3px #e3263628}button{border:0;cursor:pointer;font-weight:800;border-radius:12px;transition:transform .15s,filter .15s}button:hover{filter:brightness(1.12);transform:translateY(-1px)}button:active{transform:translateY(0)}.primary{background:var(--blue);color:white;padding:0 20px;box-shadow:0 7px 20px #e3263633}.secondary{background:#202838;color:#d5dced;padding:11px 14px;border:1px solid #354052}.message{min-height:48px;margin-top:14px;border:1px solid #2e3746;border-radius:12px;padding:13px;color:#aeb9cc;font-size:13px;line-height:1.5;background:#0e121a}.message.good{color:var(--green);border-color:#24634c}.message.warn{color:#ffcc73;border-color:#65502b}.game-actions{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-top:15px}.attempts{font-size:12px;color:var(--muted)}.how-list{display:grid;gap:15px;margin-top:18px}.how-item{display:flex;gap:13px;align-items:flex-start}.number{width:31px;height:31px;flex-shrink:0;display:grid;place-items:center;background:#421b24;border:1px solid #7d2c3b;color:#ff9aa4;border-radius:10px;font-size:12px;font-weight:800}.how-item strong{font-size:13px;display:block;margin:1px 0 4px}.how-item span{font-size:12px;color:var(--muted);line-height:1.55}
+.feature-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:22px}.feature{padding:17px 14px;background:#151a24;border:1px solid #2b3341;border-radius:13px}.feature-icon{font-size:20px}.feature strong{display:block;font-size:12px;margin:10px 0 5px}.feature span{font-size:11px;color:var(--muted);line-height:1.5;display:block}
+footer{border-top:1px solid #252a35;padding:22px;text-align:center;color:#687387;font-size:12px}footer b{color:#aab7cf}
+@media(max-width:760px){header{height:66px;padding:0 17px}.status{font-size:10px;padding:7px 9px}main{padding:27px 15px 45px}.hero{grid-template-columns:1fr;gap:24px;padding-top:15px}.hero h1{letter-spacing:-1.7px}.preview{padding:22px}.content{grid-template-columns:1fr}.game-card{grid-row:auto}.feature-grid{grid-template-columns:1fr}.card{padding:23px}.input-row{flex-direction:column}.primary{padding:15px}.stats{gap:8px}.stat{padding:11px}.big-number{font-size:58px}}
+</style>
+</head>
+<body>
+<header>
+  <div class="brand"><div class="logo">✦</div><div>NUMBER QUEST<small>PYTHON DEVELOPMENT PROJECT</small></div></div>
+  <div class="status"><span class="dot"></span> GAME READY</div>
+</header>
+<main>
+  <section class="hero">
+    <div>
+      <div class="eyebrow">PROJECT 03 · LOGIC & FUN</div>
+      <h1>Think you can<br>guess the <span>number?</span></h1>
+      <p>A sleek little number guessing game. Find the secret number between 1 and 100 using hints, sharpen your logic, and try to beat your best score.</p>
+      <div class="chips"><span class="chip">⚡ Instant feedback</span><span class="chip">🎯 1–100 range</span><span class="chip">📱 Responsive design</span></div>
+    </div>
+    <div class="preview">
+      <div class="preview-top"><span class="label">YOUR NEXT CHALLENGE</span><span class="level">LEVEL 01</span></div>
+      <div class="big-number">0<span>1</span>–100</div>
+      <p>One secret number. Unlimited determination.</p>
+      <div class="meter"><span></span></div>
+      <div class="stats"><div class="stat"><strong id="heroAttempts">0</strong><small>GUESSES THIS ROUND</small></div><div class="stat"><strong id="heroWins">0</strong><small>ROUNDS WON</small></div><div class="stat"><strong id="heroBest">—</strong><small>BEST GUESSES</small></div></div>
+    </div>
+  </section>
+  <section class="content">
+    <article class="card game-card">
+      <div class="game-head"><h2>🎮 Play the game</h2><span class="pill">● LIVE GAME</span></div>
+      <p class="sub">We've picked a secret number. Enter a guess and we'll guide you higher or lower until you get it right.</p>
+      <div class="range"><span>MINIMUM · 1</span><span>MAXIMUM · 100</span></div><div class="range-line"></div>
+      <form id="guessForm">
+        <div class="input-row"><input id="guessInput" type="number" min="1" max="100" placeholder="Enter a number…" aria-label="Your guess" required><button class="primary" type="submit">Make a guess →</button></div>
+      </form>
+      <div id="message" class="message" role="status" aria-live="polite">👋 Ready when you are! Enter a number from 1 to 100.</div>
+      <div class="game-actions"><span class="attempts">Attempts: <b id="attempts">0</b></span><button id="resetBtn" class="secondary" type="button">↻ New game</button></div>
+    </article>
+    <article class="card">
+      <h2>How to play</h2><p class="sub">Three simple steps stand between you and victory.</p>
+      <div class="how-list">
+        <div class="how-item"><div class="number">01</div><div><strong>Pick a number</strong><span>Choose any whole number between 1 and 100.</span></div></div>
+        <div class="how-item"><div class="number">02</div><div><strong>Follow the hints</strong><span>You'll be told if the secret number is higher or lower.</span></div></div>
+        <div class="how-item"><div class="number">03</div><div><strong>Win the round</strong><span>Find the number in as few guesses as you can.</span></div></div>
+      </div>
+    </article>
+    <article class="card">
+      <h2>Project highlights</h2><p class="sub">A small project with the essentials of a polished web experience.</p>
+      <div class="feature-grid">
+        <div class="feature"><div class="feature-icon">🧠</div><strong>Game logic</strong><span>Random number and comparison logic.</span></div>
+        <div class="feature"><div class="feature-icon">💬</div><strong>Smart hints</strong><span>Clear feedback after every guess.</span></div>
+        <div class="feature"><div class="feature-icon">📈</div><strong>Score tracking</strong><span>Wins and best attempts tracked in your session.</span></div>
+      </div>
+    </article>
+  </section>
+</main>
+<footer>BUILT FOR LEARNING · <b>NUMBER QUEST</b> · HTML, CSS & JAVASCRIPT</footer>
+<script>
+(() => {
+  let secret, count = 0, wins = 0, best = null, finished = false;
+  const form = document.getElementById('guessForm');
+  const input = document.getElementById('guessInput');
+  const message = document.getElementById('message');
+  const attempts = document.getElementById('attempts');
+  const heroAttempts = document.getElementById('heroAttempts');
+  const heroWins = document.getElementById('heroWins');
+  const heroBest = document.getElementById('heroBest');
+  function newGame() {
+    secret = Math.floor(Math.random() * 100) + 1;
+    count = 0; finished = false;
+    attempts.textContent = '0'; heroAttempts.textContent = '0';
+    input.disabled = false; input.value = ''; input.focus();
+    message.className = 'message';
+    message.textContent = '👋 New number selected. Make your first guess!';
+    form.querySelector('button').disabled = false;
+  }
+  form.addEventListener('submit', (event) => {
+    event.preventDefault();
+    if (finished) return;
+    const guess = Number(input.value);
+    if (!Number.isInteger(guess) || guess < 1 || guess > 100) {
+      message.className = 'message warn';
+      message.textContent = '⚠️ Please enter a whole number from 1 to 100.';
+      return;
+    }
+    count++; attempts.textContent = count; heroAttempts.textContent = count;
+    if (guess === secret) {
+      finished = true; wins++;
+      if (best === null || count < best) best = count;
+      heroWins.textContent = wins; heroBest.textContent = best;
+      message.className = 'message good';
+      message.textContent = `🎉 Correct! The secret number was ${secret}. You got it in ${count} ${count === 1 ? 'guess' : 'guesses'}!`;
+      input.disabled = true; form.querySelector('button').disabled = true;
+    } else {
+      message.className = 'message warn';
+      const distance = Math.abs(secret - guess);
+      const warmth = distance <= 5 ? '🔥 Very close!' : distance <= 15 ? '✨ Getting warmer.' : '';
+      message.textContent = `${guess < secret ? '⬆️ Too low — try a higher number.' : '⬇️ Too high — try a lower number.'} ${warmth}`;
+      input.select();
+    }
+  });
+  document.getElementById('resetBtn').addEventListener('click', newGame);
+  newGame();
+})();
+</script>
+</body>
+</html>
